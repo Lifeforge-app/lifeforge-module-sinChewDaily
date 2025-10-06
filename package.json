@@ -6,8 +6,9 @@
     "types": "cd client && bun tsc && cd ../server && bun tsc"
   },
   "dependencies": {
-    "@types/sanitize-html": "^2.16.0",
     "sanitize-html": "^2.17.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@types/sanitize-html": "^2.16.0"
+  }
 }
