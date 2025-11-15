@@ -5,7 +5,7 @@ export default {
   name: 'Sin Chew Daily',
   icon: 'tabler:news',
   routes: {
-    'sin-chew-daily': lazy(() => import('@'))
+    '/': lazy(() => import('@'))
   },
   category: 'Information'
 } satisfies ModuleConfig
