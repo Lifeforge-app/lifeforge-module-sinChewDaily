@@ -89,7 +89,12 @@ const ENDPOINT = {
 
 const list = forgeController
   .query()
-  .description('Get latest news from Sin Chew')
+  .description({
+    en: 'Get news articles by category',
+    ms: 'Dapatkan artikel berita mengikut kategori',
+    'zh-CN': '按类别获取新闻文章',
+    'zh-TW': '按類別獲取新聞文章'
+  })
   .input({
     query: z.object({
       type: z.enum(Object.keys(ENDPOINT) as Array<keyof typeof ENDPOINT>),
@@ -151,7 +156,12 @@ const list = forgeController
 
 const getContent = forgeController
   .query()
-  .description('Get content of a news article')
+  .description({
+    en: 'Get full article content',
+    ms: 'Dapatkan kandungan artikel penuh',
+    'zh-CN': '获取完整文章内容',
+    'zh-TW': '獲取完整文章內容'
+  })
   .input({
     query: z.object({
       url: z.string().url()
