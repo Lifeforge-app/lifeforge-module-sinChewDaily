@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { ItemWrapper, useModalStore } from 'lifeforge-ui'
+import { Card, useModalStore } from 'lifeforge-ui'
 
 import type { NewsArticle } from '..'
 import ContentModal from './ContentModal'
@@ -8,7 +8,7 @@ function ArticleItem({ item }: { item: NewsArticle }) {
   const open = useModalStore(state => state.open)
 
   return (
-    <ItemWrapper
+    <Card
       isInteractive
       as="article"
       className="flex flex-col items-center gap-6 md:flex-row"
@@ -45,7 +45,7 @@ function ArticleItem({ item }: { item: NewsArticle }) {
           })
         }}
       />
-    </ItemWrapper>
+    </Card>
   )
 }
 

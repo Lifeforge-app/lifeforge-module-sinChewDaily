@@ -248,8 +248,8 @@ function SinChewDaily() {
           icon="tabler:category"
           label="category"
           namespace="apps.sinChewDaily"
-          setValue={setMainCategory}
           value={mainCategory}
+          onChange={setMainCategory}
         >
           {Object.keys(categoryStructure).map(cat => (
             <ListboxOption
@@ -271,8 +271,8 @@ function SinChewDaily() {
             icon="tabler:folder"
             label="subcategory"
             namespace="apps.sinChewDaily"
-            setValue={setSubCategory}
             value={subCategory}
+            onChange={setSubCategory}
           >
             {availableSubCategories.map(subCat => (
               <ListboxOption
@@ -296,8 +296,8 @@ function SinChewDaily() {
             icon="tabler:folders"
             label="subSubcategory"
             namespace="apps.sinChewDaily"
-            setValue={setSubSubCategory}
             value={subSubCategory}
+            onChange={setSubSubCategory}
           >
             {availableSubSubCategories.map(subSubCat => (
               <ListboxOption
@@ -316,8 +316,8 @@ function SinChewDaily() {
             icon="tabler:clock"
             label="range"
             namespace="apps.sinChewDaily"
-            setValue={setRange}
             value={range}
+            onChange={setRange}
           >
             {RANGES.map(rng => (
               <ListboxOption key={rng} label={rng} value={rng} />
@@ -327,10 +327,11 @@ function SinChewDaily() {
       </div>
       {shouldShowEmptyState ? (
         <EmptyStateScreen
-          description="You need to select all available category levels to view the news articles."
           icon="tabler:folder-question"
-          name="subcategory"
-          namespace="apps.sinChewDaily"
+          message={{
+            id: 'subcategory',
+            namespace: 'apps.sinChewDaily'
+          }}
         />
       ) : newsList === 'loading' ? (
         <LoadingScreen />
@@ -343,7 +344,7 @@ function SinChewDaily() {
           </div>
           <Pagination
             className="mb-8"
-            currentPage={page}
+            page={page}
             totalPages={
               fullCategory in CUSTOM_MAX_PAGE
                 ? CUSTOM_MAX_PAGE[fullCategory as keyof typeof CUSTOM_MAX_PAGE]
