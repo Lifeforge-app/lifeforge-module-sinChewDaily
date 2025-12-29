@@ -1,6 +1,6 @@
 @import 'tailwindcss' source ('.');
 
-@reference '../../../../packages/lifeforge-ui/dist';
+@reference '../../../packages/lifeforge-ui/dist';
 
 .news-article {
   & figure {
@@ -8,7 +8,7 @@
   }
 
   & img {
-    @apply shadow-custom md:max-w-1/2 w-full rounded-xl;
+    @apply shadow-custom w-full rounded-xl md:max-w-1/2;
   }
 
   & p:has(img) {
