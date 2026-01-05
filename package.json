@@ -5,7 +5,7 @@
     "type": "git",
     "url": "https://github.com/lifeforge-app/lifeforge-module-sinChewDaily.git"
   },
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Melvin Chia <melvinchia623600@gmail.com>",
   "description": "Get the latest news from Sin Chew Daily.",
   "scripts": {
