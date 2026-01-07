@@ -1,4 +1,3 @@
-import forgeAPI from '@/utils/forgeAPI'
 import {
   EmptyStateScreen,
   ListboxInput,
@@ -11,7 +10,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { InferOutput } from 'shared'
 
+import forgeAPI from '@/utils/forgeAPI'
+
 import ArticleItem from './components/ArticleItem'
+import './index.css'
 
 const CATEGORIES = [
   'latest',
