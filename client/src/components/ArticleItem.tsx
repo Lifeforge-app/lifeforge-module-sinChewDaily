@@ -5,7 +5,7 @@ import type { NewsArticle } from '..'
 import ContentModal from './ContentModal'
 
 function ArticleItem({ item }: { item: NewsArticle }) {
-  const open = useModalStore(state => state.open)
+  const { open } = useModalStore()
 
   return (
     <Card
