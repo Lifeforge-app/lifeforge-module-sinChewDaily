@@ -1,7 +1,10 @@
-import { forgeController, forgeRouter } from '@functions/routes'
+import { forgeRouter } from '@lifeforge/server-utils'
+import { createForge } from '@lifeforge/server-utils'
 import { JSDOM } from 'jsdom'
 import sanitizeHtml from 'sanitize-html'
 import z from 'zod'
+
+const forge = createForge({})
 
 function getCategoryPostsEndpoint(catNumber: number) {
   return {
@@ -87,14 +90,9 @@ const ENDPOINT = {
   'xuehai:hou-lang-fang': getCategoryPostsEndpoint(310070)
 }
 
-const list = forgeController
+const list = forge
   .query()
-  .description({
-    en: 'Get news articles by category',
-    ms: 'Dapatkan artikel berita mengikut kategori',
-    'zh-CN': '按类别获取新闻文章',
-    'zh-TW': '按類別獲取新聞文章'
-  })
+  .description('Get news articles by category')
   .input({
     query: z.object({
       type: z.enum(Object.keys(ENDPOINT) as Array<keyof typeof ENDPOINT>),
@@ -154,14 +152,9 @@ const list = forgeController
     ).filter(e => !['会员文', 'VIP文'].includes(e.category))
   })
 
-const getContent = forgeController
+const getContent = forge
   .query()
-  .description({
-    en: 'Get full article content',
-    ms: 'Dapatkan kandungan artikel penuh',
-    'zh-CN': '获取完整文章内容',
-    'zh-TW': '獲取完整文章內容'
-  })
+  .description('Get full article content')
   .input({
     query: z.object({
       url: z.string().url()

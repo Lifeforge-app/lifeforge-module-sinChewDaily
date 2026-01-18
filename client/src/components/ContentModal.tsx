@@ -1,6 +1,7 @@
-import forgeAPI from '@/utils/forgeAPI'
 import { useQuery } from '@tanstack/react-query'
 import { ModalHeader, WithQuery } from 'lifeforge-ui'
+
+import forgeAPI from '@/utils/forgeAPI'
 
 function ContentModal({
   onClose,
@@ -12,7 +13,7 @@ function ContentModal({
   }
 }) {
   const contentQuery = useQuery(
-    forgeAPI.sinChewDaily.getContent
+    forgeAPI.getContent
       .input({
         url
       })

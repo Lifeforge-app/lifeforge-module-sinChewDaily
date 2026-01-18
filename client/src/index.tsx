@@ -88,7 +88,7 @@ const CUSTOM_MAX_PAGE = {
 
 const RANGES = ['6H', '24H', '1W'] as const
 
-export type NewsArticle = InferOutput<typeof forgeAPI.sinChewDaily.list>[number]
+export type NewsArticle = InferOutput<typeof forgeAPI.list>[number]
 
 interface CategoryStructure {
   [key: string]: {
@@ -213,7 +213,7 @@ function SinChewDaily() {
     const fetchData = async () => {
       setNewsList('loading')
 
-      const data = await forgeAPI.sinChewDaily.list
+      const data = await forgeAPI.list
         .input({
           type: fullCategory as (typeof CATEGORIES)[number],
           page: page.toString(),
