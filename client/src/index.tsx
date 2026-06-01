@@ -5,10 +5,10 @@ import {
   LoadingScreen,
   ModuleHeader,
   Pagination
-} from 'lifeforge-ui'
+} from '@lifeforge/ui'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { InferOutput } from 'shared'
+import type { InferOutput } from '@lifeforge/shared'
 
 import forgeAPI from '@/utils/forgeAPI'
 

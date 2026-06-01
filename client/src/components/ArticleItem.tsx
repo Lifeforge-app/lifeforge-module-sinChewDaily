@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react/dist/iconify.js'
-import { Card, useModalStore } from 'lifeforge-ui'
+
+import { Card, useModalStore } from '@lifeforge/ui'
 
 import type { NewsArticle } from '..'
 import ContentModal from './ContentModal'
