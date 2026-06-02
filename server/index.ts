@@ -1,4 +1,4 @@
-import { forgeRouter } from '@lifeforge/server-utils'
+import { forgeRouter, writeContractFileToClient } from '@lifeforge/server-utils'
 import { createForge } from '@lifeforge/server-utils'
 import { JSDOM } from 'jsdom'
 import sanitizeHtml from 'sanitize-html'
@@ -91,37 +91,50 @@ const ENDPOINT = {
 }
 
 const list = forge
-  .query()
-  .description('Get news articles by category')
-  .input({
-    query: z.object({
-      type: z.enum(Object.keys(ENDPOINT) as Array<keyof typeof ENDPOINT>),
-      page: z
-        .string()
-        .default('1')
-        .transform(val => parseInt(val, 10)),
-      range: z.enum(['6H', '24H', '1W']).optional().default('6H')
-    })
+  .query({
+    description: 'Get news articles by category',
+    input: {
+      query: z.object({
+        type: z.enum(Object.keys(ENDPOINT) as Array<keyof typeof ENDPOINT>),
+        page: z.string().default('1'),
+        range: z.enum(['6H', '24H', '1W']).optional().default('6H')
+      })
+    },
+    output: {
+      OK: z.array(
+        z.object({
+          id: z.number(),
+          time_display: z.string(),
+          category: z.string(),
+          title: z.string(),
+          excerpt: z.string(),
+          image: z.string(),
+          link: z.string()
+        })
+      )
+    }
   })
-  .callback(async ({ query: { page, type, range } }) => {
+  .callback(async ({ query: { page, type, range }, response }) => {
     const targetEndpoint = ENDPOINT[type]
+
+    const parsedPage = parseInt(page, 10)
 
     const query = new URLSearchParams(targetEndpoint.defaultQuery)
 
-    query.set('page', page.toString())
+    query.set('page', parsedPage.toString())
 
-    if (type === 'hot' && page > 1) {
+    if (type === 'hot' && parsedPage > 1) {
       query.set('range', range)
     }
 
-    const response = await fetch(`${targetEndpoint.root}?${query.toString()}`)
+    const res = await fetch(`${targetEndpoint.root}?${query.toString()}`)
 
-    let data = await response.json()
+    let data = await res.json()
 
     if (type === 'hot') {
       data =
         data[
-          page === 1
+          parsedPage === 1
             ? {
                 '6H': 'zero',
                 '24H': 'first',
@@ -131,8 +144,8 @@ const list = forge
         ]
     }
 
-    return (
-      data.map((item: any) => ({
+    return response.ok(
+      (data.map((item: any) => ({
         id: item.ID,
         time_display: item.time_display || item.date_diff,
         category: item.cat || item.catlabel,
@@ -149,21 +162,30 @@ const list = forge
         image: string
         link: string
       }>
-    ).filter(e => !['会员文', 'VIP文'].includes(e.category))
+      ).filter(e => !['会员文', 'VIP文'].includes(e.category))
+    )
   })
 
 const getContent = forge
-  .query()
-  .description('Get full article content')
-  .input({
-    query: z.object({
-      url: z.string().url()
-    })
+  .query({
+    description: 'Get full article content',
+    input: {
+      query: z.object({
+        url: z.string().url()
+      })
+    },
+    output: {
+      OK: z.object({
+        title: z.string(),
+        time: z.string(),
+        content: z.string()
+      })
+    }
   })
-  .callback(async ({ query: { url } }) => {
-    const response = await fetch(url)
+  .callback(async ({ query: { url }, response }) => {
+    const res = await fetch(url)
 
-    const text = await response.text()
+    const text = await res.text()
 
     const parser = new JSDOM(text)
 
@@ -192,14 +214,18 @@ const getContent = forge
       }
     })
 
-    return {
+    return response.ok({
       title,
       time,
       content: sanitizedContent
-    }
+    })
   })
 
-export default forgeRouter({
+const routes = forgeRouter({
   list,
   getContent
 })
+
+writeContractFileToClient(routes, import.meta.dirname)
+
+export default routes
