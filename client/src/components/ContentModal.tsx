@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import { ModalHeader, WithQuery } from '@lifeforge/ui'
 
-import forgeAPI from '@/utils/forgeAPI'
+import { forgeAPI } from '@/manifest'
 
 function ContentModal({
   onClose,
