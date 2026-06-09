@@ -1,7 +1,12 @@
-import { forgeRouter, writeContractFileToClient , createForge } from '@lifeforge/server-utils'
 import { JSDOM } from 'jsdom'
 import sanitizeHtml from 'sanitize-html'
 import z from 'zod'
+
+import {
+  createForge,
+  forgeRouter,
+  writeContractFileToClient
+} from '@lifeforge/server-utils'
 
 const forge = createForge({})
 
@@ -144,23 +149,24 @@ const list = forge
     }
 
     return response.ok(
-      (data.map((item: any) => ({
-        id: item.ID,
-        time_display: item.time_display || item.date_diff,
-        category: item.cat || item.catlabel,
-        title: item.title || item.post_title,
-        excerpt: item.excerpt || item.post_excerpt,
-        image: item.image,
-        link: item.permalink || item.the_permalink
-      })) as Array<{
-        id: number
-        time_display: string
-        category: string
-        title: string
-        excerpt: string
-        image: string
-        link: string
-      }>
+      (
+        data.map((item: any) => ({
+          id: item.ID,
+          time_display: item.time_display || item.date_diff,
+          category: item.cat || item.catlabel,
+          title: item.title || item.post_title,
+          excerpt: item.excerpt || item.post_excerpt,
+          image: item.image,
+          link: item.permalink || item.the_permalink
+        })) as Array<{
+          id: number
+          time_display: string
+          category: string
+          title: string
+          excerpt: string
+          image: string
+          link: string
+        }>
       ).filter(e => !['会员文', 'VIP文'].includes(e.category))
     )
   })
