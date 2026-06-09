@@ -1,3 +1,7 @@
+import { useEffect, useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+
+import type { InferOutput } from '@lifeforge/api'
 import {
   EmptyStateScreen,
   ListboxInput,
@@ -6,9 +10,6 @@ import {
   ModuleHeader,
   Pagination
 } from '@lifeforge/ui'
-import { useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import type { InferOutput } from '@lifeforge/shared'
 
 import { forgeAPI } from '@/manifest'
 
