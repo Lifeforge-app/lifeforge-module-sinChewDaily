@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useModuleTranslation } from '@lifeforge/localization'
 
 import type { InferOutput } from '@lifeforge/api'
+import { useModuleTranslation } from '@lifeforge/localization'
 import {
   EmptyStateScreen,
   ListboxInput,
@@ -244,7 +244,6 @@ function SinChewDaily() {
           className="flex-1"
           icon="tabler:category"
           label="category"
-          namespace="apps.sinChewDaily"
           value={mainCategory}
           onChange={setMainCategory}
         >
@@ -267,7 +266,6 @@ function SinChewDaily() {
             className="flex-1"
             icon="tabler:folder"
             label="subcategory"
-            namespace="apps.sinChewDaily"
             value={subCategory}
             onChange={setSubCategory}
           >
@@ -292,7 +290,6 @@ function SinChewDaily() {
             className="flex-1"
             icon="tabler:folders"
             label="subSubcategory"
-            namespace="apps.sinChewDaily"
             value={subSubCategory}
             onChange={setSubSubCategory}
           >
@@ -312,7 +309,6 @@ function SinChewDaily() {
             className="flex-1"
             icon="tabler:clock"
             label="range"
-            namespace="apps.sinChewDaily"
             value={range}
             onChange={setRange}
           >
@@ -326,8 +322,7 @@ function SinChewDaily() {
         <EmptyStateScreen
           icon="tabler:folder-question"
           message={{
-            id: 'subcategory',
-            namespace: 'apps.sinChewDaily'
+            id: 'subcategory'
           }}
         />
       ) : newsList === 'loading' ? (
