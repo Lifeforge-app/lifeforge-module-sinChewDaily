@@ -1,5 +1,4 @@
-import { Icon } from '@lifeforge/ui'
-import { Card, useModalStore } from '@lifeforge/ui'
+import { Icon , Card, useModalStore } from '@lifeforge/ui'
 
 import type { NewsArticle } from '..'
 import ContentModal from './ContentModal'

@@ -103,17 +103,11 @@ interface CategoryStructure {
 
 function SinChewDaily() {
   const { t } = useModuleTranslation()
-
   const [page, setPage] = useState(1)
-
   const [mainCategory, setMainCategory] = useState<string>('latest')
-
   const [subCategory, setSubCategory] = useState<string>('')
-
   const [subSubCategory, setSubSubCategory] = useState<string>('')
-
   const [range, setRange] = useState<(typeof RANGES)[number]>(RANGES[0])
-
   const [newsList, setNewsList] = useState<NewsArticle[] | 'loading'>('loading')
 
   const categoryStructure = useMemo<CategoryStructure>(() => {
