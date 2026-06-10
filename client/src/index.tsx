@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { useModuleTranslation } from '@lifeforge/localization'
 
 import type { InferOutput } from '@lifeforge/api'
 import {
@@ -102,7 +102,7 @@ interface CategoryStructure {
 }
 
 function SinChewDaily() {
-  const { t } = useTranslation('apps.sinChewDaily')
+  const { t } = useModuleTranslation()
 
   const [page, setPage] = useState(1)
 
