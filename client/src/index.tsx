@@ -240,10 +240,10 @@ function SinChewDaily() {
       <ModuleHeader />
       <div className="flex w-full flex-wrap items-center gap-3">
         <ListboxInput
-          buttonContent={<span>{t(`categories.${mainCategory}`)}</span>}
           className="flex-1"
           icon="tabler:category"
           label="category"
+          renderContent={() => <span>{t(`categories.${mainCategory}`)}</span>}
           value={mainCategory}
           onChange={setMainCategory}
         >
@@ -257,15 +257,15 @@ function SinChewDaily() {
         </ListboxInput>
         {availableSubCategories.length > 0 && (
           <ListboxInput
-            buttonContent={
+            className="flex-1"
+            icon="tabler:folder"
+            label="subcategory"
+            renderContent={() => (
               <span>
                 {t(`categories.${subCategory}`) ||
                   t('inputs.subcategory.placeholder')}
               </span>
-            }
-            className="flex-1"
-            icon="tabler:folder"
-            label="subcategory"
+            )}
             value={subCategory}
             onChange={setSubCategory}
           >
@@ -281,15 +281,15 @@ function SinChewDaily() {
 
         {availableSubSubCategories.length > 0 && (
           <ListboxInput
-            buttonContent={
+            className="flex-1"
+            icon="tabler:folders"
+            label="subSubcategory"
+            renderContent={() => (
               <span>
                 {t(`categories.${subSubCategory}`) ||
                   t('inputs.sub-subcategory.placeholder')}
               </span>
-            }
-            className="flex-1"
-            icon="tabler:folders"
-            label="subSubcategory"
+            )}
             value={subSubCategory}
             onChange={setSubSubCategory}
           >
@@ -305,10 +305,10 @@ function SinChewDaily() {
 
         {fullCategory === 'hot' && (
           <ListboxInput
-            buttonContent={<span>{range}</span>}
             className="flex-1"
             icon="tabler:clock"
             label="range"
+            renderContent={() => <span>{range}</span>}
             value={range}
             onChange={setRange}
           >
