@@ -12,10 +12,7 @@ import {
 
 import { forgeAPI } from '@/manifest'
 import type { Category } from '@/providers/CategoryProvider'
-import {
-  CategoryProvider,
-  useCategories
-} from '@/providers/CategoryProvider'
+import { CategoryProvider, useCategories } from '@/providers/CategoryProvider'
 
 import ArticleItem from './components/ArticleItem'
 import CategorySelector from './components/CategorySelector'
@@ -62,7 +59,7 @@ function SinChewDailyContent() {
         <WithQuery query={newsListQuery}>
           {newsList => (
             <>
-              <Stack gap="sm" my="lg">
+              <Stack my="lg">
                 {newsList.map(item => (
                   <ArticleItem key={item.id} item={item} />
                 ))}
