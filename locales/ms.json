@@ -80,5 +80,8 @@
       "title": "Tiada Subkategori Dipilih",
       "description": "Sila pilih subkategori dari senarai di atas."
     }
+  },
+  "modals": {
+    "viewArticle": "Lihat Artikel"
   }
 }

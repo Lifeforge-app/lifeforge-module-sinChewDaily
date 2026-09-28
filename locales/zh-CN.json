@@ -80,5 +80,8 @@
       "title": "未选择子类别",
       "description": "请从上面的列表中选择一个子类别。"
     }
+  },
+  "modals": {
+    "viewArticle": "查看文章"
   }
 }

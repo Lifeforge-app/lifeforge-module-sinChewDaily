@@ -216,7 +216,10 @@ const getContent = forge
       ),
       textFilter: (text: string) => {
         return ['ADVERTISEMENT', '打开全文'].includes(text) ? '' : text.trim()
-      }
+      },
+      exclusiveFilter: frame =>
+        frame.tag === 'a' &&
+        frame.text.replace(/\s/g, '').toLowerCase() === 'hidden'
     })
 
     return response.ok({

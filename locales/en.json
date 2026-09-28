@@ -80,5 +80,8 @@
       "title": "No Subcategory Selected",
       "description": "Please select a subcategory from the list above."
     }
+  },
+  "modals": {
+    "viewArticle": "View Article"
   }
 }

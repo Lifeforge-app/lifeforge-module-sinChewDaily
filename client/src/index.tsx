@@ -1,323 +1,56 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
 
 import type { InferOutput } from '@lifeforge/api'
-import { useModuleTranslation } from '@lifeforge/localization'
 import {
   EmptyStateScreen,
-  ListboxInput,
-  ListboxOption,
-  LoadingScreen,
   ModuleHeader,
-  Pagination
+  Pagination,
+  Stack,
+  WithQuery
 } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
+import type { Category } from '@/providers/CategoryProvider'
+import {
+  CategoryProvider,
+  useCategories
+} from '@/providers/CategoryProvider'
 
 import ArticleItem from './components/ArticleItem'
+import CategorySelector from './components/CategorySelector'
 import './index.css'
-
-const CATEGORIES = [
-  'latest',
-  'headline',
-  'hot',
-  'domestic:latest',
-  'domestic:realtime',
-  'domestic:editor-choice',
-  'domestic:hot',
-  'domestic:society',
-  'domestic:education',
-  'domestic:chinese-society',
-  'domestic:headline',
-  'domestic:warm-action',
-  'domestic:mixed',
-  'domestic:politics',
-  'domestic:truth-seeking',
-  'international:latest',
-  'international:worldwide',
-  'international:headline',
-  'international:international-platter',
-  'international:explore-the-world',
-  'finance:latest',
-  'finance:spotlight',
-  'finance:international',
-  'entertainment:latest',
-  'entertainment:foreign',
-  'entertainment:msia',
-  'local:johor:focus',
-  'local:johor:singapore',
-  'local:johor:eye',
-  'local:johor:mixed',
-  'local:metropolis:headline',
-  'local:metropolis:dynamic',
-  'local:metropolis:interesting',
-  'local:metropolis:story',
-  'local:metropolis:perspective',
-  'local:perak:focus',
-  'local:perak:special-column',
-  'local:perak:dynamic',
-  'local:perak:school',
-  'local:perak:society',
-  'local:perak:people',
-  'supplement:topic',
-  'supplement:lifestyle',
-  'supplement:travel',
-  'supplement:food',
-  'supplement:column',
-  'supplement:things',
-  'supplement:fashion',
-  'supplement:new-education',
-  'supplement:e-trend',
-  'supplement:arts',
-  'supplement:life-protection',
-  'supplement:car-viewing',
-  'supplement:wellness',
-  'supplement:family',
-  'supplement:people',
-  'supplement:audio-video',
-  'supplement:readers',
-  'supplement:flower-trace',
-  'supplement:creation',
-  'supplement:airasia-news',
-  'xuehai:power-teens',
-  'xuehai:study-record',
-  'xuehai:hou-lang-fang'
-] as const
 
 const CUSTOM_MAX_PAGE = {
   hot: 10
 }
 
-const RANGES = ['6H', '24H', '1W'] as const
-
 export type NewsArticle = InferOutput<typeof forgeAPI.list>[number]
 
-interface CategoryStructure {
-  [key: string]: {
-    subcategories?: {
-      [key: string]: {
-        subsubcategories?: string[]
-      }
-    }
-  }
-}
-
-function SinChewDaily() {
-  const { t } = useModuleTranslation()
+function SinChewDailyContent() {
   const [page, setPage] = useState(1)
-  const [mainCategory, setMainCategory] = useState<string>('latest')
-  const [subCategory, setSubCategory] = useState<string>('')
-  const [subSubCategory, setSubSubCategory] = useState<string>('')
-  const [range, setRange] = useState<(typeof RANGES)[number]>(RANGES[0])
-  const [newsList, setNewsList] = useState<NewsArticle[] | 'loading'>('loading')
+  const { fullCategory, range, shouldShowEmptyState } = useCategories()
 
-  const categoryStructure = useMemo<CategoryStructure>(() => {
-    const structure: CategoryStructure = {}
-
-    CATEGORIES.forEach(cat => {
-      const parts = cat.split(':')
-
-      const main = parts[0]
-
-      const sub = parts[1]
-
-      const subsub = parts[2]
-
-      if (!structure[main]) {
-        structure[main] = {}
-      }
-
-      if (sub) {
-        if (!structure[main].subcategories) {
-          structure[main].subcategories = {}
-        }
-
-        if (!structure[main].subcategories![sub]) {
-          structure[main].subcategories![sub] = {}
-        }
-
-        if (subsub) {
-          if (!structure[main].subcategories![sub].subsubcategories) {
-            structure[main].subcategories![sub].subsubcategories = []
-          }
-
-          if (
-            !structure[main].subcategories![sub].subsubcategories!.includes(
-              subsub
-            )
-          ) {
-            structure[main].subcategories![sub].subsubcategories!.push(subsub)
-          }
-        }
-      }
-    })
-
-    return structure
-  }, [])
-
-  const availableSubCategories = useMemo(() => {
-    return categoryStructure[mainCategory]?.subcategories
-      ? Object.keys(categoryStructure[mainCategory].subcategories!)
-      : []
-  }, [categoryStructure, mainCategory])
-
-  const availableSubSubCategories = useMemo(() => {
-    return (
-      categoryStructure[mainCategory]?.subcategories?.[subCategory]
-        ?.subsubcategories || []
-    )
-  }, [categoryStructure, mainCategory, subCategory])
-
-  const fullCategory = useMemo(() => {
-    let result = mainCategory
-
-    if (subCategory) {
-      result += `:${subCategory}`
-
-      if (subSubCategory) {
-        result += `:${subSubCategory}`
-      }
-    }
-
-    return result
-  }, [mainCategory, subCategory, subSubCategory])
-
-  const shouldShowEmptyState = useMemo(() => {
-    if (availableSubCategories.length > 0 && !subCategory) {
-      return true
-    }
-
-    if (availableSubSubCategories.length > 0 && !subSubCategory) {
-      return true
-    }
-
-    return false
-  }, [
-    availableSubCategories.length,
-    subCategory,
-    availableSubSubCategories.length,
-    subSubCategory
-  ])
-
-  useEffect(() => {
-    if (shouldShowEmptyState) {
-      setNewsList([])
-
-      return
-    }
-
-    const fetchData = async () => {
-      setNewsList('loading')
-
-      const data = await forgeAPI.list
-        .input({
-          type: fullCategory as (typeof CATEGORIES)[number],
-          page: page.toString(),
-          ...(fullCategory === 'hot' ? { range } : {})
-        })
-        .query()
-
-      setNewsList(data)
-    }
-
-    fetchData()
-  }, [fullCategory, range, page, shouldShowEmptyState])
+  const newsListQuery = useQuery(
+    forgeAPI.list
+      .input({
+        type: fullCategory as Category,
+        page: page.toString(),
+        range
+      })
+      .queryOptions({
+        enabled: !shouldShowEmptyState
+      })
+  )
 
   useEffect(() => {
     setPage(1)
   }, [fullCategory, range])
 
-  useEffect(() => {
-    setSubCategory('')
-    setSubSubCategory('')
-  }, [mainCategory])
-
-  useEffect(() => {
-    setSubSubCategory('')
-  }, [subCategory])
-
   return (
     <>
       <ModuleHeader />
-      <div className="flex w-full flex-wrap items-center gap-3">
-        <ListboxInput
-          className="flex-1"
-          icon="tabler:category"
-          label="category"
-          renderContent={() => <span>{t(`categories.${mainCategory}`)}</span>}
-          value={mainCategory}
-          onChange={setMainCategory}
-        >
-          {Object.keys(categoryStructure).map(cat => (
-            <ListboxOption
-              key={cat}
-              label={t(`categories.${cat}`)}
-              value={cat}
-            />
-          ))}
-        </ListboxInput>
-        {availableSubCategories.length > 0 && (
-          <ListboxInput
-            className="flex-1"
-            icon="tabler:folder"
-            label="subcategory"
-            renderContent={() => (
-              <span>
-                {t(`categories.${subCategory}`) ||
-                  t('inputs.subcategory.placeholder')}
-              </span>
-            )}
-            value={subCategory}
-            onChange={setSubCategory}
-          >
-            {availableSubCategories.map(subCat => (
-              <ListboxOption
-                key={subCat}
-                label={t(`categories.${subCat}`)}
-                value={subCat}
-              />
-            ))}
-          </ListboxInput>
-        )}
-
-        {availableSubSubCategories.length > 0 && (
-          <ListboxInput
-            className="flex-1"
-            icon="tabler:folders"
-            label="subSubcategory"
-            renderContent={() => (
-              <span>
-                {t(`categories.${subSubCategory}`) ||
-                  t('inputs.sub-subcategory.placeholder')}
-              </span>
-            )}
-            value={subSubCategory}
-            onChange={setSubSubCategory}
-          >
-            {availableSubSubCategories.map(subSubCat => (
-              <ListboxOption
-                key={subSubCat}
-                label={t(`categories.${subSubCat}`)}
-                value={subSubCat}
-              />
-            ))}
-          </ListboxInput>
-        )}
-
-        {fullCategory === 'hot' && (
-          <ListboxInput
-            className="flex-1"
-            icon="tabler:clock"
-            label="range"
-            renderContent={() => <span>{range}</span>}
-            value={range}
-            onChange={setRange}
-          >
-            {RANGES.map(rng => (
-              <ListboxOption key={rng} label={rng} value={rng} />
-            ))}
-          </ListboxInput>
-        )}
-      </div>
+      <CategorySelector />
       {shouldShowEmptyState ? (
         <EmptyStateScreen
           icon="tabler:folder-question"
@@ -325,28 +58,40 @@ function SinChewDaily() {
             id: 'subcategory'
           }}
         />
-      ) : newsList === 'loading' ? (
-        <LoadingScreen />
       ) : (
-        <>
-          <div className="my-6 space-y-3">
-            {newsList.map(item => (
-              <ArticleItem key={item.id} item={item} />
-            ))}
-          </div>
-          <Pagination
-            className="mb-8"
-            page={page}
-            totalPages={
-              fullCategory in CUSTOM_MAX_PAGE
-                ? CUSTOM_MAX_PAGE[fullCategory as keyof typeof CUSTOM_MAX_PAGE]
-                : 30
-            }
-            onPageChange={setPage}
-          />
-        </>
+        <WithQuery query={newsListQuery}>
+          {newsList => (
+            <>
+              <Stack gap="sm" my="lg">
+                {newsList.map(item => (
+                  <ArticleItem key={item.id} item={item} />
+                ))}
+              </Stack>
+              <Pagination
+                mb="xl"
+                page={page}
+                totalPages={
+                  fullCategory in CUSTOM_MAX_PAGE
+                    ? CUSTOM_MAX_PAGE[
+                        fullCategory as keyof typeof CUSTOM_MAX_PAGE
+                      ]
+                    : 30
+                }
+                onPageChange={setPage}
+              />
+            </>
+          )}
+        </WithQuery>
       )}
     </>
+  )
+}
+
+function SinChewDaily() {
+  return (
+    <CategoryProvider>
+      <SinChewDailyContent />
+    </CategoryProvider>
   )
 }
 

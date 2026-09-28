@@ -1,4 +1,4 @@
-import { Card, Icon, useModalStore } from '@lifeforge/ui'
+import { Box, Card, Icon, Text, surface, useModalStore } from '@lifeforge/ui'
 
 import type { NewsArticle } from '..'
 import ContentModal from './ContentModal'
@@ -10,34 +10,68 @@ function ArticleItem({ item }: { item: NewsArticle }) {
     <Card
       isInteractive
       as="article"
-      className="flex flex-col items-center gap-6 md:flex-row"
+      align="center"
+      direction={{ base: 'column', md: 'row' }}
+      gap="lg"
     >
-      <div className="component-bg-lighter relative aspect-video w-full shrink-0 overflow-hidden rounded-lg md:w-96">
+      <Box
+        aspectRatio="16 / 9"
+        bg={surface.light}
+        flexShrink="0"
+        overflow="hidden"
+        position="relative"
+        r="lg"
+        width={{ base: '100%', md: '24rem' }}
+      >
         <Icon
-          className="text-bg-300 dark:text-bg-700 absolute top-1/2 left-1/2 size-16 -translate-x-1/2 -translate-y-1/2 transform"
+          color={{ base: 'bg-300', dark: 'bg-700' }}
           icon="tabler:news"
+          position="absolute"
+          size="4rem"
+          style={{
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)'
+          }}
         />
         {item.image && (
           <img
             alt=""
-            className="relative h-full w-full object-cover"
             referrerPolicy="no-referrer"
             src={item.image}
+            style={{
+              height: '100%',
+              objectFit: 'cover',
+              position: 'relative',
+              width: '100%'
+            }}
           />
         )}
-      </div>
-      <div className="w-full">
-        <p className="text-custom-500 mb-2 text-lg font-semibold">
+      </Box>
+      <Box width="100%">
+        <Text as="p" color="primary" mb="sm" size="lg" weight="semibold">
           {item.category}
-        </p>
-        <h3 className="text-2xl font-semibold">{item.title}</h3>
-        <p className="text-bg-600 dark:text-bg-400 mt-4 line-clamp-3">
+        </Text>
+        <Text as="h3" size="2xl" weight="semibold">
+          {item.title}
+        </Text>
+        <Text
+          as="p"
+          color={{ base: 'bg-600', dark: 'bg-400' }}
+          lineClamp={3}
+          mt="md"
+        >
           {item.excerpt}
-        </p>
-        <p className="text-bg-500 mt-4">{item.time_display}</p>
-      </div>
-      <button
-        className="absolute inset-0 rounded-xl"
+        </Text>
+        <Text as="p" color="muted" mt="md">
+          {item.time_display}
+        </Text>
+      </Box>
+      <Box
+        as="button"
+        inset="0"
+        position="absolute"
+        r="xl"
         onClick={() => {
           open(ContentModal, {
             url: item.link

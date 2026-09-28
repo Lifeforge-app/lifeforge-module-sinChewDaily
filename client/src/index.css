@@ -1,29 +1,51 @@
-@reference 'lifeforge-ui/dist';
+.news-article figure {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+  margin-block: calc(var(--spacing) * 6);
+}
 
-@layer custom {
-  .news-article {
-    & figure {
-      @apply my-6 flex flex-col items-center gap-3;
-    }
+.news-article img {
+  width: 100%;
+  max-width: 100%;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--custom-shadow);
+}
 
-    & img {
-      @apply shadow-custom w-full rounded-xl md:max-w-1/2;
-    }
-
-    & p:has(img) {
-      @apply mb-6 flex flex-col items-center;
-    }
-
-    & figcaption {
-      @apply text-bg-500 text-center text-sm;
-    }
-
-    & p {
-      @apply text-bg-600 dark:text-bg-300 my-4 leading-[2em];
-    }
-
-    & h5 {
-      @apply text-2xl font-semibold;
-    }
+@media (min-width: 768px) {
+  .news-article img {
+    max-width: 50%;
   }
+}
+
+.news-article p:has(img) {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: calc(var(--spacing) * 6);
+}
+
+.news-article figcaption {
+  color: var(--color-bg-500);
+  text-align: center;
+  font-size: var(--text-sm);
+  line-height: var(--text-sm--line-height);
+}
+
+.news-article p {
+  color: var(--color-bg-600);
+  font-size: 1.2em;
+  margin-block: calc(var(--spacing) * 4);
+  line-height: 2em;
+}
+
+.dark .news-article p {
+  color: var(--color-bg-300);
+}
+
+.news-article h5 {
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+  font-weight: 600;
 }

@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { ModalHeader, WithQuery } from '@lifeforge/ui'
+import { Box, ModalHeader, Text, WithQuery } from '@lifeforge/ui'
 
 import { forgeAPI } from '@/manifest'
 
@@ -22,14 +22,18 @@ function ContentModal({
   )
 
   return (
-    <div className="min-w-[60vw]">
+    <Box minWidth="60vw">
       <ModalHeader icon="tabler:news" title="View Article" onClose={onClose} />
       <WithQuery query={contentQuery}>
         {content => (
           <>
-            <h1 className="mb-2 text-3xl font-semibold">{content.title}</h1>
-            <div className="text-bg-500 mb-8">{content.time}</div>
-            <div
+            <Text as="h1" mb="sm" size="3xl" weight="semibold">
+              {content.title}
+            </Text>
+            <Text as="p" color="muted" mb="xl">
+              {content.time}
+            </Text>
+            <Box
               className="news-article"
               dangerouslySetInnerHTML={{
                 __html: content.content
@@ -38,7 +42,7 @@ function ContentModal({
           </>
         )}
       </WithQuery>
-    </div>
+    </Box>
   )
 }
 
